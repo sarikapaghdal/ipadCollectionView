@@ -49,9 +49,9 @@ class ListViewModel {
                     case .success(let data):
                         do{
                             let resulData = try JSONDecoder().decode(Results.self, from: data)
-                            let photosAre = resulData.photos
-                            if let finalPhoto = photosAre?.photo {
-                                for (_, element) in finalPhoto.enumerated() {
+                            let fetchPhotos = resulData.photos
+                            if let fetchPhoto = fetchPhotos?.photo {
+                                for (_, element) in fetchPhoto.enumerated() {
                                     self?.urlOfTitleArray.append(element.title ?? "")
                                     self?.urlOfImageArray.append(element.urlString ?? "")
                                 }
