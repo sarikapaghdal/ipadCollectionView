@@ -10,25 +10,82 @@ import XCTest
 
 class ipadCollectionUITests: XCTestCase {
 
+    let app = XCUIApplication()
+    
     override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
         XCUIApplication().launch()
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
 
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    }
+    
+    func testNumberOfCollectionView() {
+        let collectionView = app.collectionViews
+        XCTAssertNotNil(collectionView.count)
+        XCTAssertEqual(collectionView.count, 1, "There should be only 1 Collection View in our App")
+    }
+    
+    func testNumberOfCollectionViewCell() {
+        let collectionView = app.collectionViews
+        XCTAssertNotEqual(collectionView.cells.count, 0, "There should not be 0 Cell")
+        XCTAssertNotNil(collectionView.cells.count)
+    }
+    
+    // tap on the first cell of CollectionView and tap 'Back' button on navigation bar
+    func testThirdCellTap() {
+        
+        XCUIApplication().collectionViews.cells.element(boundBy:0).tap()
+        XCUIApplication().navigationBars.buttons.element(boundBy: 0).tap()
     }
 
-    func testExample() {
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testImageUrlData()
+    {
+        let imageUrl = "https://live.staticflickr.com/65535/48201527036_d30dbf1ffd.jpg"
+        guard let imageRUL = URL(string: imageUrl) else {
+            return
+        }
+        URLSession.shared.dataTask(with: imageRUL) { (data, response, error) in
+            guard let data = data else { return }
+            XCTAssertNotNil(data)
+        }
     }
-
+    
+    func testNumberOfImages() {
+        let images = app.images
+        XCTAssertNotNil(images.count)
+        XCTAssertNotEqual(images.count, 1, "There should be more than 1 images in our App")
+    }
+    
+    func testCollectionViewInteraction() {
+        
+        let viewCells = app.collectionViews.cells
+        
+        if viewCells.count > 0 {
+            let count: Int = (viewCells.count - 1)
+            
+            let promise = expectation(description: "Wait for view cells")
+            
+            for i in stride(from: 0, to: count , by: 1) {
+                
+                // Grab the first cell and verify that it exists and tap it
+                let collectionViewCell = viewCells.element(boundBy: i)
+                
+                XCTAssertTrue(collectionViewCell.exists, "The \(i) cell is in place on the collection")
+                // Does this actually take us to the next screen
+                collectionViewCell.tap()
+                
+                if i == (count - 1) {
+                    promise.fulfill()
+                }
+                // Back
+                XCUIApplication().navigationBars.buttons.element(boundBy: 0).tap()
+            }
+            waitForExpectations(timeout: 2, handler: nil)
+            XCTAssertTrue(true, "Finished validating the view cells")
+            
+        } else {
+            XCTAssert(false, "Was not able to find any view cells")
+        }
+    }
 }
