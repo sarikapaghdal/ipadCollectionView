@@ -56,9 +56,9 @@ class ListViewModel {
                                     self?.urlOfImageArray.append(element.urlString ?? "")
                                 }
                             }
-                            //DispatchQueue.main.async {
-                                //self?.delegate?.listCollectionView.reloadData()
-                            //}
+                            DispatchQueue.main.async {
+                                self?.delegate?.listCollectionView.reloadData()
+                            }
                         }
                         catch let jsonError{
                             print("can't serialize data", jsonError)
