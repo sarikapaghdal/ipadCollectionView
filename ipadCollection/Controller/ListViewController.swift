@@ -32,7 +32,7 @@ extension ListViewController : UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         if let viewController = storyBoard.instantiateViewController(withIdentifier: "DetailViewController") as? DetailViewController {
-            viewController.viewModel.titleIS = viewModel.urlOfTitleArray[indexPath.row]
+            viewController.viewModel.titleIS = viewModel.titleArray[indexPath.row]
             viewController.viewModel.imageURL = viewModel.urlOfImageArray[indexPath.row]
             self.navigationController?.pushViewController(viewController, animated: true)
         }
@@ -52,7 +52,7 @@ extension ListViewController : UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ListCollectionViewCell.identifier, for: indexPath) as? ListCollectionViewCell else{
             return UICollectionViewCell()
         }
-        cell.titleLabel.text = viewModel.urlOfTitleArray[indexPath.row]
+        cell.titleLabel.text = viewModel.titleArray[indexPath.row]
         cell.layer.borderColor = UIColor.lightGray.cgColor
         cell.layer.borderWidth = 1
         

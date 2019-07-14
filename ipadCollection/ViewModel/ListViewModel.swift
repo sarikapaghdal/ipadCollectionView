@@ -14,8 +14,15 @@ class ListViewModel {
     
     weak var delegate: ListViewController?
 
-    var urlOfImageArray = [String]()
-    var urlOfTitleArray = [String]()
+    var urlOfImageArray = [String](){
+    didSet {
+            DispatchQueue.main.async {
+                self.delegate?.listCollectionView.reloadData()
+            }
+        }
+    }
+    
+    var titleArray = [String]()
 
     init(_ viewController: ListViewController) {
         delegate = viewController
@@ -52,12 +59,9 @@ class ListViewModel {
                             let fetchPhotos = resulData.photos
                             if let fetchPhoto = fetchPhotos?.photo {
                                 for (_, element) in fetchPhoto.enumerated() {
-                                    self?.urlOfTitleArray.append(element.title ?? "")
+                                    self?.titleArray.append(element.title ?? "")
                                     self?.urlOfImageArray.append(element.urlString ?? "")
                                 }
-                            }
-                            DispatchQueue.main.async {
-                                self?.delegate?.listCollectionView.reloadData()
                             }
                         }
                         catch let jsonError{
